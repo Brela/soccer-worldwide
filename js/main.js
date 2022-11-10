@@ -1,60 +1,81 @@
-//Example fetch using pokemonapi.co
-// document.querySelector('button').addEventListener('click', draw2)
-
-let deckID = ''
 
 
+//prevent default page reload on click
+document.querySelector('input').addEventListener('click', function handleClick(event) {
+  event.preventDefault();
+});
 
-fetch('https://www.deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
+
+
+/* function getFetch() {
+  const choice = document.querySelector('input').value
+  const url = 'https://pokeapi.co/api/v2/pokemon/' + choice
+
+  fetch(url)
     .then(res => res.json()) // parse response as JSON
-    .then(data => { //data is just the I gave it - parameter
-        console.log(data)
-        deckID = data.deck_id
+    .then(data => {
+      console.log(data)
     })
     .catch(err => {
-        console.log(`error ${err}`)
+      console.log(`error ${err}`)
     });
+}  */
 
+var myHeaders = new Headers();
+myHeaders.append("x-rapidapi-key", "0cdf2e99564aaa2ac3de3c12f656fb29");
+myHeaders.append("x-rapidapi-host", "v3.football.api-sports.io");
 
-document.querySelector('button').addEventListener('click', draw2)
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
 
-function draw2() {
-    const url = `https://www.deckofcardsapi.com/api/deck/${deckID}/draw/?count=2`
-
-    fetch(url)
-        .then(res => res.json()) // parse response as JSON
-        .then(data => { //data is just the I gave it - parameter
-            console.log(data)
-            document.querySelector('#player1').src = data.cards[0].image
-            document.querySelector('#player2').src = data.cards[1].image
-            let player1Val = convertToNum(data.cards[0].value)
-            let player2Val = convertToNum(data.cards[1].value)
-            if (player1Val > player2Val) {
-                document.querySelector('.result').innerText = 'Player 1 Wins'
-            } else if (player1Val < player2Val) {
-                document.querySelector('.result').innerText = 'Player 2 Wins'
-            } else {
-                document.querySelector('.result').innerText = 'Time For War'
-            }
-        })
-
-        .catch(err => {
-            console.log(`error ${err}`)
-        });
+// user selects league
+document.querySelector('.submit').addEventListener('click', function () {
+  var selectedLeague = ''
+  var e = document.getElementById('league');
+  selectedLeague = e.options[e.selectedIndex].text;
+  getFetch(selectedLeague)
+})
+// pull in API data and carry over selectedLeague
+function getFetch(selectedLeag) {
+  let selectedLeague = selectedLeag
+  fetch("https://v3.football.api-sports.io/leagues", requestOptions)
+    .then(response => response.json())
+    .then(results => getLeagueID(results, selectedLeague))
+    .catch(error => console.log('error', error));
 }
 
-function convertToNum(val) {
-    if (val === 'ACE') {
-        return 14
-    } else if (val === 'KING') {
-        return 13
 
-    } else if (val === 'QUEEN') {
-        return 12
-    }
-    else if (val === 'JACK') {
-        return 11
-    } else {
-        return Number(val)
-    }
+
+function getLeagueID(results, selected) {
+  let data = results
+  let arr = data.response
+  console.log(data)
+  console.log('array' + arr)
+  let selectedLeague = selected
+  console.log('selected' + selectedLeague)
+  for (let i = 0; i < arr.length; i++) {
+    // arr[i].country.name.includes('England') && 
+    if (arr[i].league.name === selectedLeague)
+      var pLeague = arr[i].league.id
+    // console.table(arr[i].league.id, arr[i].league.name)
+  }
+  console.log(pLeague)
 }
+function getFetchTopScorers() {
+  fetch("https://v3.football.api-sports.io/players/topscorers?season=2022&league=39", requestOptions)
+    .then(respons => respons.json())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+
+}
+
+/* function topScorers(result) {
+  let topScorersData = result
+  console.log(`topScorers: ${topScorersData}`)
+} */
+
+// premier league ID = 39
+
