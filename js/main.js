@@ -5,7 +5,32 @@ document.querySelector('input').addEventListener('click', function handleClick(e
   event.preventDefault();
 });
 
+// CREATE TABLE
 
+function tableCreate() {
+  var body = document.getElementsByTagName('body')[0];
+  var tbl = document.createElement('table');
+  // tbl.style.width = '50%';
+  tbl.setAttribute('border', '1');
+  var tbdy = document.createElement('tbody');
+  for (var i = 0; i < 20; i++) {
+    var tr = document.createElement('tr');
+    for (var j = 0; j < 2; j++) {
+      if (i == 2 && j == 1) {
+        break
+      } else {
+        var td = document.createElement('td');
+        td.appendChild(document.createTextNode('\u0020'))
+        // i == 1 && j == 1 ? td.setAttribute('rowSpan', '2') : null;
+        tr.appendChild(td)
+      }
+    }
+    tbdy.appendChild(tr);
+  }
+  tbl.appendChild(tbdy);
+  body.appendChild(tbl)
+}
+tableCreate();
 
 /* function getFetch() {
   const choice = document.querySelector('input').value
@@ -80,6 +105,7 @@ function getFetchTopScorers(selectedLeague) {
     .then(result => result.response.forEach(el => {
       console.log(el.player.photo)
       console.log(el.player) // object
+
       console.log(el.player.name)
       console.log(el.player.id)
       console.log(el.player.nationality)
@@ -87,10 +113,6 @@ function getFetchTopScorers(selectedLeague) {
     .catch(error => console.log('error', error));
 }
 
-/* function topScorers(result) {
-  let topScorersData = result
-  console.log(`topScorers: ${topScorersData}`)
-} */
 
 // premier league ID = 39
 
