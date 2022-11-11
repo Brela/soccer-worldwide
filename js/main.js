@@ -36,20 +36,12 @@ document.querySelector('.submit').addEventListener('click', function () {
   var selectedLeague = ''
   var e = document.getElementById('league');
   selectedLeague = e.options[e.selectedIndex].text;
-  getFetch(selectedLeague)
+  getFetchTopScorers(selectedLeague)
 })
-// pull in API data and carry over selectedLeague
-function getFetch(selectedLeag) {
-  let selectedLeague = selectedLeag
-  fetch("https://v3.football.api-sports.io/leagues", requestOptions)
-    .then(response => response.json())
-    .then(results => getLeagueID(results, selectedLeague))
-    .catch(error => console.log('error', error));
-}
 
 
-
-function getLeagueID(results, selected) {
+// then carry over selected league and results
+/* function getLeagueID(selected, results) {
   let data = results
   let arr = data.response
   console.log(data)
@@ -57,19 +49,42 @@ function getLeagueID(results, selected) {
   let selectedLeague = selected
   console.log('selected' + selectedLeague)
   for (let i = 0; i < arr.length; i++) {
-    // arr[i].country.name.includes('England') && 
+    // arr[i].country.name.includes('England') &&
     if (arr[i].league.name === selectedLeague)
       var pLeague = arr[i].league.id
     // console.table(arr[i].league.id, arr[i].league.name)
   }
   console.log(pLeague)
-}
-function getFetchTopScorers() {
-  fetch("https://v3.football.api-sports.io/players/topscorers?season=2022&league=39", requestOptions)
-    .then(respons => respons.json())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
+} */
 
+
+/* const results = function getFetch() {
+
+  fetch("https://v3.football.api-sports.io/leagues", requestOptions)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+    })
+    .catch(error => console.log('error', error));
+}
+
+console.log(results) */
+
+
+function getFetchTopScorers(selectedLeague) {
+  // learn switch and case
+  let pluginLeague = 39
+
+  fetch(`https://v3.football.api-sports.io/players/topscorers?season=2022&league=${pluginLeague}`, requestOptions)
+    .then(respons => respons.json())
+    .then(result => result.response.forEach(el => {
+      console.log(el.player.photo)
+      console.log(el.player) // object
+      console.log(el.player.name)
+      console.log(el.player.id)
+      console.log(el.player.nationality)
+    }))
+    .catch(error => console.log('error', error));
 }
 
 /* function topScorers(result) {
