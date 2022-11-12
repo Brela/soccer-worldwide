@@ -15,9 +15,12 @@ function tableCreate() {
   var tbdy = document.createElement('tbody');
   for (var i = 0; i < 20; i++) {
     var tr = document.createElement('tr');
-    for (var j = 0; j < 2; j++) {
-      if (i == 2 && j == 1) {
-        break
+    // use this to create headings on first row - needs work
+    for (var j = 0; j < 10; j++) {
+      if (i == 0 && j == 0) {
+        tr.style.height = '50px'
+        break;
+
       } else {
         var td = document.createElement('td');
         td.appendChild(document.createTextNode('\u0020'))
