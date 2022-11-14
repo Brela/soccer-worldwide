@@ -33,23 +33,70 @@ function getFetchTopScorers(selectedLeague) {
     .catch(error => console.log('error', error));
 
 }
+
 function createTable(result) {
-  result.forEach(el => {
-    console.log(el.player.photo)
-    let photo = el.player.photo
+  console.log(result.length)
+  var body = document.getElementsByTagName('body')[0];
+  var tbl = document.createElement('table');
+  // tbl.style.width = '50%';
+  tbl.setAttribute('border', '1');
+  var tbdy = document.createElement('tbody');
+
+
+  result.forEach((el, i) => {
+    // tr.style.height = '50px'
+    let pPhoto = el.player.photo
     console.log(el.player) // object
 
 
-    console.log(el.player.name)
     let pName = el.player.name
-    console.log(el.player.id)
+    console.log(pName)
     let pId = el.player.id
-    console.log(el.player.nationality)
+    console.log(pId)
     let pNation = el.player.nationality
 
+    addRow([pPhoto, pName, pId, pNation])
+
+    function addRow(arr) {
+      let pId = arr.splice(2, 1)
+      console.log(pId)
+
+      let stats = getStats()
+      console.log(stats)
+      arr.push(stats)
+      console.log(arr)
+
+      var tr = document.createElement('tr'); //creates blank row
+      for (let i = 0; i < arr.length; i++) {
+        var td = document.createElement('td'); //creates element (node?)
+        if (i === 0) {
+          var img = document.createElement('img')
+          img.src = arr[i]
+          td.appendChild(img)
+
+
+        } else {
+          td.appendChild(document.createTextNode(arr[i]))
+        }
+        tr.appendChild(td)
+      }
+
+      //  this actually adds the column
+      tbdy.appendChild(tr); // this actually adds the row
+    }
   })
 
+  tbl.appendChild(tbdy);
+  body.appendChild(tbl)
+}
 
+//  havent started this one yet -- need to get player stats
+function getStats() {
+
+  fetch(`https://v3.football.api-sports.io/players/topscorers?season=2022&league=${pluginLeague}`, requestOptions)
+    .then(respons => respons.json())
+    .then(result => createTable(result.response))
+    .catch(error => console.log('error', error));
 }
 
 // premier league ID = 39
@@ -123,4 +170,4 @@ function tableCreate(photo, pName, pId, pNation) {
   tbl.appendChild(tbdy);
   body.appendChild(tbl)
 }
-tableCreate();
+// tableCreate();
