@@ -29,13 +29,14 @@ function getFetchTopScorers(selectedLeague) {
 
   fetch(`https://v3.football.api-sports.io/players/topscorers?season=2022&league=${pluginLeague}`, requestOptions)
     .then(respons => respons.json())
-    .then(result => createTable(result.response))
+    .then(result => createTable(result.response, pluginLeague))
     .catch(error => console.log('error', error));
 
 }
 
-function createTable(result) {
+function createTable(result, pluginLeague) {
   console.log(result.length)
+  var pluginLeague = pluginLeague
   var body = document.getElementsByTagName('body')[0];
   var tbl = document.createElement('table');
   // tbl.style.width = '50%';
@@ -61,10 +62,9 @@ function createTable(result) {
       let pId = arr.splice(2, 1)
       console.log(pId)
 
-      let stats = getStats()
-      console.log(stats)
-      arr.push(stats)
-      console.log(arr)
+
+
+
 
       var tr = document.createElement('tr'); //creates blank row
       for (let i = 0; i < arr.length; i++) {
@@ -81,6 +81,8 @@ function createTable(result) {
         tr.appendChild(td)
       }
 
+      // getStats(pId)
+
       //  this actually adds the column
       tbdy.appendChild(tr); // this actually adds the row
     }
@@ -90,14 +92,16 @@ function createTable(result) {
   body.appendChild(tbl)
 }
 
-//  havent started this one yet -- need to get player stats
-function getStats() {
+// need to get player stats
+/* function getStats(pId) {
 
-  fetch(`https://v3.football.api-sports.io/players/topscorers?season=2022&league=${pluginLeague}`, requestOptions)
+  fetch(`https://v3.football.api-sports.io/players?id=${pId}&season=2022&`, requestOptions)
     .then(respons => respons.json())
-    .then(result => createTable(result.response))
-    .catch(error => console.log('error', error));
-}
+    .then(result => {
+      result
+    })
+    .catch(error => console.log('error', error))
+} */
 
 // premier league ID = 39
 
