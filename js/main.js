@@ -81,7 +81,7 @@ function createTable(result, pluginLeague) {
         tr.appendChild(td)
       }
 
-      // getStats(pId)
+      getStats(pId)
 
       //  this actually adds the column
       tbdy.appendChild(tr); // this actually adds the row
@@ -93,15 +93,19 @@ function createTable(result, pluginLeague) {
 }
 
 // need to get player stats
-/* function getStats(pId) {
+function getStats(pId) {
 
-  fetch(`https://v3.football.api-sports.io/players?id=${pId}&season=2022&`, requestOptions)
+  fetch(`https://v3.football.api-sports.io/players?id=${pId}&season=2022`, requestOptions)
     .then(respons => respons.json())
     .then(result => {
-      result
+      console.log(result.response[0].statistics[0])
+      // last 10 showing up undefined at .statistics
+
+      // currently here
+
     })
     .catch(error => console.log('error', error))
-} */
+}
 
 // premier league ID = 39
 
