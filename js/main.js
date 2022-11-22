@@ -43,7 +43,6 @@ function createTable(result, pluginLeague) {
   tbl.setAttribute('border', '1');
   var tbdy = document.createElement('tbody');
 
-
   result.forEach((el, i) => {
     // tr.style.height = '50px'
     let pPhoto = el.player.photo
@@ -52,9 +51,12 @@ function createTable(result, pluginLeague) {
 
     let pName = el.player.name
     console.log(pName)
+
     let pId = el.player.id
     console.log(pId)
     let pNation = el.player.nationality
+
+
 
     addRow([pPhoto, pName, pId, pNation])
 
@@ -91,6 +93,8 @@ function createTable(result, pluginLeague) {
   tbl.appendChild(tbdy);
   body.appendChild(tbl)
 }
+
+
 
 // need to get player stats
 function getStats(pId) {
