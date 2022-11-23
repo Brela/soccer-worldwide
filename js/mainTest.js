@@ -18,11 +18,11 @@ var requestOptions = {
 // insted of user selected from dropdown, we will just load stats on page load
 
 function getFetchTopScorers() {
-  let arrOfLeagues = [2, 39]
+  let arrOfLeagues = [61] // shortened array of leagues for testing
   // let arrOfLeagues = [2, 39, 253, 78, 61, 140, 71]
 
   /* 
-  Champions league = 2
+  Champions league = 2 // champions league has different array position at getstats() it is statistics[1] instead of statistics[0]
   premier league 39
   MLS = 253
   bundesliga = 78
@@ -43,27 +43,39 @@ getFetchTopScorers()
 
 
 function createTable(result) {
-  console.log(result)
+
   var body = document.getElementsByTagName('body')[0];
   var tbl = document.createElement('table');
   tbl.setAttribute('border', '1');
   var tbdy = document.createElement('tbody');
 
-  result.forEach((el, i) => {
+  result.forEach((el, i) => { // for each player
     if (i === 0) { // this is added just for testing so I dont use my API calls
-      let pPhoto = el.player.photo
-      console.log(el.player) // object
-      let pName = el.player.name
-      console.log(pName)
+
       let pId = el.player.id
       console.log(pId)
+
+      getStats(pId)
+
+      let pPhoto = el.player.photo
+      // console.log(el.player) object
+      let pName = el.player.name
+      console.log(pName)
       let pNation = el.player.nationality
 
+      // this should call the player stats constructor
+      // the player constructor should wait for it's own goals to be difined before returning
+      let stats = player()
+      waitForStatsBeforeAddingRow()
+      function waitForStatsBeforeAddingRow() {
+        if (stats) {
+          addRow([pPhoto, pName, pNation]) // this adds row once stats are in
+        } else {
+          setTimeout(waitForStatsBeforeAddingRow, 500)
+        }
+      }
 
-      addRow([pPhoto, pName, pId, pNation])
       function addRow(arr) {
-        let pId = arr.splice(2, 1)
-        console.log(pId)
 
         // adding the info into elements in rows
         var tr = document.createElement('tr'); //creates blank row
@@ -80,9 +92,6 @@ function createTable(result) {
           }
           tr.appendChild(td)
         }
-
-        let stats = getStats(pId)
-
 
         //  this actually adds the column
         tbdy.appendChild(tr); // this actually adds the row
@@ -101,9 +110,39 @@ function getStats(pId) {
     .then(respons => respons.json())
 
     // .then(result => console.log(result))
-    .then(result => addRow(result.response))
+    .then(result => {
+      /*    let name = result.response[0].player
+         console.log(name) */
+      // champions league has different array position. at statistics[1] instead of statistics[0]
+      let s = result.response[0].statistics[0] //stats
+      console.log(s)
+      console.log(s.goals.total, s.goals.assists)
+      player.goals = s.goals.total
+    })
     .catch(error => console.log('error', error));
 }
+function player() {
+
+  if (this.goals) {
+    return this.goals
+  } else {
+    setTimeout(player, 500)
+  }
+}
+
+/* class MakeNewPlayerStats {
+  constructor(goals, assists) {
+    this.goals = goals
+    this.assists = assists
+  }
+}
+ */
+
+
+
+
+
+
 
 
 // TEMPLATE 
