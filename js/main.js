@@ -111,7 +111,6 @@ function getStats(pId) {
     .catch(error => console.log('error', error))
 }
 
-// premier league ID = 39
 
 
 
