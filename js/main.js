@@ -1,9 +1,9 @@
+// league and team IDs can be found in documentation
 
-
-//prevent default page reload on click
+/* prevent default page reload on click
 document.querySelector('input').addEventListener('click', function handleClick(event) {
   event.preventDefault();
-});
+}); */
 
 var myHeaders = new Headers();
 myHeaders.append("x-rapidapi-key", "0cdf2e99564aaa2ac3de3c12f656fb29");
@@ -15,101 +15,155 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-// USER SELECTS LAGUE FROM DROPDOWN
-document.querySelector('.submit').addEventListener('click', function () {
-  var selectedLeague = ''
-  var e = document.getElementById('league');
-  selectedLeague = e.options[e.selectedIndex].text;
-  getFetchTopScorers(selectedLeague)
-})
+// insted of user selected from dropdown, we will just load stats on page load
 
-function getFetchTopScorers(selectedLeague) {
-  // learn switch and case
-  let pluginLeague = 39
+function getFetchTopScorers() {
+  let arrOfLeagues = [61, 39, 253] // shortened array of leagues for testing
+  // let arrOfLeagues = [2, 39, 253, 78, 61, 140, 71]
 
-  fetch(`https://v3.football.api-sports.io/players/topscorers?season=2022&league=${pluginLeague}`, requestOptions)
-    .then(respons => respons.json())
-    .then(result => createTable(result.response, pluginLeague))
-    .catch(error => console.log('error', error));
+  /* 
+  Champions league = 2 // champions league has different array position at getstats() it is statistics[1] instead of statistics[0]
+  premier league 39
+  MLS = 253
+  bundesliga = 78
+  ligue 1 == 61
+  la liga = 140 
+  Serie A = 71
+  */
+  arrOfLeagues.forEach(el => {
+    fetch(`https://v3.football.api-sports.io/players/topscorers?season=2022&league=${el}`, requestOptions)
+      .then(respons => respons.json())
 
+      // .then(result => console.log(result))
+      .then(result => createTable(result.response))
+      .catch(error => console.log('error', error));
+  })
 }
+getFetchTopScorers()
 
-function createTable(result, pluginLeague) {
-  console.log(result.length)
-  var pluginLeague = pluginLeague
+
+function createTable(result) {
+
   var body = document.getElementsByTagName('body')[0];
   var tbl = document.createElement('table');
-  // tbl.style.width = '50%';
   tbl.setAttribute('border', '1');
   var tbdy = document.createElement('tbody');
 
-  result.forEach((el, i) => {
-    // tr.style.height = '50px'
-    let pPhoto = el.player.photo
-    console.log(el.player) // object
+  //add header to table
+  let arrHeader = ['', '', '', 'Goals', 'Shots on Target', 'Assists']
+  var headerRow = document.createElement('tr'); //creates blank row
 
 
-    let pName = el.player.name
-    console.log(pName)
+  for (let i = 0; i < arrHeader.length; i++) {
+    var headerEl = document.createElement('td'); //creates element (node?)
+    headerEl.appendChild(document.createTextNode(arrHeader[i]))
+    headerRow.appendChild(headerEl)  // this actually adds the column
+  }
+  tbdy.appendChild(headerRow); // this actually adds the row
 
-    let pId = el.player.id
-    console.log(pId)
-    let pNation = el.player.nationality
 
 
+  result.forEach((el, i) => { // for each player
+    if ((i === 0) || (i === 1)) { // this is added just for testing so I dont use my API calls , remove the if statement after testing
 
-    addRow([pPhoto, pName, pId, pNation])
-
-    function addRow(arr) {
-      let pId = arr.splice(2, 1)
+      let pId = el.player.id
       console.log(pId)
-
-
-
-
-
-      var tr = document.createElement('tr'); //creates blank row
-      for (let i = 0; i < arr.length; i++) {
-        var td = document.createElement('td'); //creates element (node?)
-        if (i === 0) {
-          var img = document.createElement('img')
-          img.src = arr[i]
-          td.appendChild(img)
-
-
-        } else {
-          td.appendChild(document.createTextNode(arr[i]))
-        }
-        tr.appendChild(td)
-      }
 
       getStats(pId)
 
-      //  this actually adds the column
-      tbdy.appendChild(tr); // this actually adds the row
+      let pPhoto = el.player.photo
+      // console.log(el.player) object
+      let pName = el.player.name
+      console.log(pName)
+      let pNation = el.player.nationality
+
+      addRow([pPhoto, pName, pId])  // pId is pulled in for classname of row
+      function addRow(arr) {
+
+        // adding the info (photo and name) into elements in rows
+        var tr = document.createElement('tr'); //creates blank row
+        tr.className = 'p' + pId
+
+        for (let i = 0; i < arr.length - 1; i++) {
+          var td = document.createElement('td'); //creates element (node?)
+          if (i === 0) {
+            var img = document.createElement('img')
+            img.src = arr[i]
+            td.appendChild(img)
+
+
+          } else {
+            td.appendChild(document.createTextNode(arr[i]))
+          }
+          tr.appendChild(td)  // this actually adds the column
+        }
+
+
+        tbdy.appendChild(tr); // this actually adds the row
+      }
     }
   })
 
   tbl.appendChild(tbdy);
   body.appendChild(tbl)
 }
+function addStatsToRows(stats, pId) {
+  console.log(stats, pId)
+  console.log(stats.goals.total)
+  // need to create an array of stats that will be added to row
+  let arrStats = [stats.team.logo, stats.goals.total, stats.shots.on, stats.goals.assists]
+  console.log(arrStats)
+  let rowsClass = '.p' + pId
+  // adding stats into elements in rows
+  var row = document.querySelector(rowsClass); //creates blank row
+  console.log(row)
+
+  for (let i = 0; i < arrStats.length; i++) {
+    let td = document.createElement('td'); //creates element (node?)
+    if (i === 0) {
+      let img = document.createElement('img')
+      img.src = arrStats[i]
+      td.appendChild(img)
 
 
+    } else {
+      td.appendChild(document.createTextNode(arrStats[i]))
+    }
+    row.appendChild(td)  // this actually adds the column
+  }
 
-// need to get player stats
+}
+
 function getStats(pId) {
-
+  // player stats in documentation is Players > Players
   fetch(`https://v3.football.api-sports.io/players?id=${pId}&season=2022`, requestOptions)
     .then(respons => respons.json())
-    .then(result => {
-      console.log(result.response[0].statistics[0])
-      // last 10 showing up undefined at .statistics
 
-      // currently here
+    // .then(result => console.log(result))
+    .then(result => {
+      /*    let name = result.response[0].player
+         console.log(name) */
+      // champions league has different array position. at statistics[1] instead of statistics[0]
+      let stats = result.response[0].statistics[0] //stats
+
+      addStatsToRows(stats, pId)
 
     })
-    .catch(error => console.log('error', error))
+    .catch(error => console.log('error', error));
 }
+
+
+/* class MakeNewPlayerStats {
+  constructor(goals, assists) {
+    this.goals = goals
+    this.assists = assists
+  }
+}
+ */
+
+
+
+
 
 
 
@@ -130,26 +184,8 @@ function getStats(pId) {
     });
 }  */
 
-// GET LEAGUE ID
 
-// then carry over selected league and results
-/* function getLeagueID(selected, results) {
-  let data = results
-  let arr = data.response
-  console.log(data)
-  console.log('array' + arr)
-  let selectedLeague = selected
-  console.log('selected' + selectedLeague)
-  for (let i = 0; i < arr.length; i++) {
-    // arr[i].country.name.includes('England') &&
-    if (arr[i].league.name === selectedLeague)
-      var pLeague = arr[i].league.id
-    // console.table(arr[i].league.id, arr[i].league.name)
-  }
-  console.log(pLeague)
-} */
-
-// CREATE TABLE WITH TABLE DATA AS PPARAMETERS
+// CREATE TABLE WITH TABLE DATA AS PPARAMETERS  --  example
 function tableCreate(photo, pName, pId, pNation) {
   var body = document.getElementsByTagName('body')[0];
   var tbl = document.createElement('table');
