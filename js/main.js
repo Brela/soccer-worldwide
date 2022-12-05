@@ -49,8 +49,10 @@ function createTable(result) {
   tbl.setAttribute('border', '1');
   var tbdy = document.createElement('tbody');
 
-  //add header to table
-  let arrHeader = ['', '', '', 'Goals', 'Shots on Target', 'Assists']
+
+  // HEADING FOR EACH TABLE
+  //  ----------------------------------------------------------------------------------------------------
+  let arrHeader = ['', '', '', 'Goals', 'On Target', 'Assists']
   var headerRow = document.createElement('tr'); //creates blank row
 
 
@@ -58,13 +60,15 @@ function createTable(result) {
     var headerEl = document.createElement('td'); //creates element (node?)
     headerEl.appendChild(document.createTextNode(arrHeader[i]))
     headerRow.appendChild(headerEl)  // this actually adds the column
+    headerRow.className = 'headingRow'
+
   }
   tbdy.appendChild(headerRow); // this actually adds the row
 
-
+  //  ----------------------------------------------------------------------------------------------------
 
   result.forEach((el, i) => { // for each player
-    if ((i === 0) || (i === 1)) { // this is added just for testing so I dont use my API calls , remove the if statement after testing
+    if (i === 0 || i === 1) { // this is added just for testing so I dont use my API calls , remove the if statement after testing
 
       let pId = el.player.id
       console.log(pId)
@@ -77,7 +81,7 @@ function createTable(result) {
       console.log(pName)
       let pNation = el.player.nationality
 
-      addRow([pPhoto, pName, pId])  // pId is pulled in for classname of row
+      addRow([pName, pPhoto, pId])  // pId is pulled in for classname of row
       function addRow(arr) {
 
         // adding the info (photo and name) into elements in rows
@@ -86,9 +90,10 @@ function createTable(result) {
 
         for (let i = 0; i < arr.length - 1; i++) {
           var td = document.createElement('td'); //creates element (node?)
-          if (i === 0) {
+          if (i === 1) {
             var img = document.createElement('img')
             img.src = arr[i]
+            td.className = 'imgTd'
             td.appendChild(img)
 
 
@@ -123,6 +128,7 @@ function addStatsToRows(stats, pId) {
     if (i === 0) {
       let img = document.createElement('img')
       img.src = arrStats[i]
+      td.className = 'logoTd'
       td.appendChild(img)
 
 
@@ -189,7 +195,7 @@ function getStats(pId) {
 function tableCreate(photo, pName, pId, pNation) {
   var body = document.getElementsByTagName('body')[0];
   var tbl = document.createElement('table');
-  // tbl.style.width = '50%';
+
   tbl.setAttribute('border', '1');
   var tbdy = document.createElement('tbody');
 

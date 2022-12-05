@@ -22,18 +22,10 @@
 
 body {
   margin: auto 5%;
-}
-
-img {
-  display: block;
-  margin: 0 auto;
-  width: 80px;
+  background-color: rgb(232, 237, 233);
 }
 
 
-img[src*='teams'] {
-  width: 15%;
-}
 
 
 
@@ -47,32 +39,52 @@ img[src*='teams'] {
 table {
   border-collapse: collapse;
   border: 2px solid rgb(200, 200, 200);
-  letter-spacing: 1px;
+
   font-size: 0.8rem;
-  width: 50vw;
-}
-
-td, th {
-  border: 1px solid rgb(190, 190, 190);
-  padding: 10px 20px;
-}
-
-th {
-  background-color: rgb(235, 235, 235);
-}
-
-td {
-  text-align: center;
   width: auto;
 }
 
+td {
+  border: 1px solid rgb(190, 190, 190);
+  padding: 10px 20px;
+  text-align: center;
+  width: 10vw;
+  font-size: 20px;
+}
+
+img {
+  display: block;
+  margin: 0 auto;
+  width: 65%;
+}
+
+/* logo */
+img[src*='teams'] {
+  width: 35%;
+}
+
+.imgTd {
+  width: auto;
+}
+
+.logoTd {
+  width: auto;
+}
 
 tr:nth-child(even) td {
   background-color: rgb(255, 255, 255);
 }
 
+
 tr:nth-child(odd) td {
-  background-color: rgb(250, 249, 249);
+  background-color: rgb(240, 240, 240);
+}
+
+tr:nth-child(1) td {
+  background-color: rgb(159, 159, 159);
+  color: rgb(70, 255, 159);
+  font-size: 1em;
+  letter-spacing: 2.5px;
 }
 
 caption {
