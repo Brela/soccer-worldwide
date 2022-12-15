@@ -20,7 +20,6 @@ var requestOptions = {
 function getFetchTopScorers() {
   let arrOfLeagues = [61, 39, 253] // shortened array of leagues for testing
   // let arrOfLeagues = [2, 39, 253, 78, 61, 140, 71]
-
   /* 
   Champions league = 2 // champions league has different array position at getstats() it is statistics[1] instead of statistics[0]
   premier league 39
@@ -30,32 +29,68 @@ function getFetchTopScorers() {
   la liga = 140 
   Serie A = 71
   */
-  arrOfLeagues.forEach(el => {
+  arrOfLeagues.forEach((el, i) => {
     fetch(`https://v3.football.api-sports.io/players/topscorers?season=2022&league=${el}`, requestOptions)
       .then(respons => respons.json())
 
       // .then(result => console.log(result))
-      .then(result => createTable(result.response))
+      .then(result => {
+        createTable(result.response, arrOfLeagues[i])
+        if (i === arrOfLeagues.length - 1) addTitleToTable(arrOfLeagues[i]) // do this function if last table/ arrItem
+      })
       .catch(error => console.log('error', error));
   })
 }
 getFetchTopScorers()
 
+// LEAGUE TITLE FOR EACH TABLE 
+//  ----------------------------------------------------------------------------------------------------
+function addTitleToTable(leagueId) {
 
-function createTable(result) {
+  let tables = document.querySelectorAll('table')
+  console.log(tables)
+  tables.forEach(table => {
+    console.log(table.className)
+    let title;
+    if (table.className === 'leagueId39') title = 'Premier League'
+    if (table.className === 'leagueId61') title = 'Ligue 1'
+    if (table.className === 'leagueId253') title = 'MLS'
+
+    addTitle(table.className, title)
+  })
+  console.log(leagueId)
+  function addTitle(tClass, title) {
+
+    let div1 = document.createElement("div");
+    div1.style.fontSize = '30px'
+    div1.style.color = 'rgb(58, 85, 88)'
+    div1.innerText = title
+    // Get the reference element
+    let div2 = document.querySelector('.' + tClass)
+    // Get the parent element
+    let parentDiv = document.querySelector('body');
+    console.log(parentDiv, div1, div2)
+    // Insert the new element into before sp2
+    parentDiv.insertBefore(div1, div2);
+
+  }
+}
+// ---------------------------------------------------------------------------------------
+function createTable(result, leagueId) {
 
   var body = document.getElementsByTagName('body')[0];
   var tbl = document.createElement('table');
+  tbl.className = 'leagueId' + leagueId
   tbl.setAttribute('border', '1');
   var tbdy = document.createElement('tbody');
 
 
-  // HEADING FOR EACH TABLE
+
+  //  ----------------------------------------------------------------------------------------------------
+  // STATS HEADING FOR EACH TABLE
   //  ----------------------------------------------------------------------------------------------------
   let arrHeader = ['', '', '', 'Goals', 'On Target', 'Assists']
   var headerRow = document.createElement('tr'); //creates blank row
-
-
   for (let i = 0; i < arrHeader.length; i++) {
     var headerEl = document.createElement('td'); //creates element (node?)
     headerEl.appendChild(document.createTextNode(arrHeader[i]))
@@ -68,7 +103,7 @@ function createTable(result) {
   //  ----------------------------------------------------------------------------------------------------
 
   result.forEach((el, i) => { // for each player
-    if (i === 0 || i === 1) { // this is added just for testing so I dont use my API calls , remove the if statement after testing
+    if (i < 10) { // this is added just for testing so I dont use my API calls , remove the if statement after testing
 
       let pId = el.player.id
       console.log(pId)
@@ -159,6 +194,8 @@ function getStats(pId) {
 }
 
 
+
+
 /* class MakeNewPlayerStats {
   constructor(goals, assists) {
     this.goals = goals
@@ -224,3 +261,17 @@ function tableCreate(photo, pName, pId, pNation) {
   body.appendChild(tbl)
 }
 // tableCreate();
+
+// this can be used to select a specific node
+/* myBody = document.getElementsByTagName("body")[0];
+myTable = myBody.getElementsByTagName("table")[0];
+myTableBody = myTable.getElementsByTagName("tbody")[0];
+myRow = myTableBody.getElementsByTagName("tr")[1];
+myCell = myRow.getElementsByTagName("td")[1];
+
+// first item element of the childNodes list of myCell
+myCellText = myCell.childNodes[0];
+
+// content of currentText is the data content of myCellText
+currentText = document.createTextNode(myCellText.data);
+myBody.appendChild(currentText); */
