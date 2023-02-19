@@ -1,8 +1,9 @@
-// league and team IDs can be found in documentation - https://www.api-football.com/documentation-v3#tag/Players/operation/get-players
+import API_KEY from './apikey'
 
+// league and team IDs can be found in documentation - https://www.api-football.com/documentation-v3#tag/Players/operation/get-players
 // Set up the headers for the API request
 var myHeaders = new Headers();
-myHeaders.append("x-rapidapi-key", "0cdf2e99564aaa2ac3de3c12f656fb29");
+myHeaders.append("x-rapidapi-key", API_KEY);
 myHeaders.append("x-rapidapi-host", "v3.football.api-sports.io");
 
 var requestOptions = {
