@@ -110,7 +110,7 @@ tr:nth-child(odd) td {
 
 tr:nth-child(1) td {
   background-color: rgb(210, 210, 210);
-  color: rgb(103, 106, 84);
+  color: rgb(89, 90, 83);
   font-size: 1.2em;
   font-weight: 600;
 }
