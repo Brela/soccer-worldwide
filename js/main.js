@@ -190,9 +190,10 @@ function addTitleToTable() {
     // Create the title element and add it to the page
     const div1 = document.createElement('div');
     div1.style.fontSize = '30px';
-    div1.style.marginLeft = '100px'
+    div1.style.marginLeft = '1px'
     div1.style.color = 'rgb(58, 85, 88)';
-    div1.style.paddingTop = '20px';
+    div1.style.paddingTop = '30px';
+    div1.style.paddingBottom = '5px';
 
     div1.innerText = title;
     // Get the reference element
