@@ -21,13 +21,27 @@
 /*******************************************/
 
 body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: auto 5%;
   background-color: rgb(232, 237, 233);
+  background-image: url(../img/stadium.jpg);
+  background-size: cover;
+  /* Adjust as needed */
+  background-position: center;
+  /* Adjust as needed */
+  padding-bottom: 200px;
 }
 
 
 
-
+.league-title {
+  font-size: 2em;
+  color: rgb(255, 255, 255);
+  margin-bottom: 5px;
+  margin-top: 25px;
+}
 
 
 
@@ -35,7 +49,17 @@ body {
 /* TABLE
 /*******************************************/
 h1, h2 {
-  color: rgb(98, 99, 87);
+  color: rgb(214, 215, 206);
+}
+
+h1 {
+  margin-top: 100px;
+  margin-bottom: 0px;
+}
+
+h2 {
+  padding-bottom: 0;
+  margin-bottom: 20px;
 }
 
 table {
@@ -53,6 +77,8 @@ td {
   width: 10vw;
   font-size: 20px;
 }
+
+
 
 img {
   display: block;

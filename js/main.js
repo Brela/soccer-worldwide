@@ -87,7 +87,10 @@ function createTable(topScorers, leagueId) {
       function addRow(arr) {
         // Create table row element and set its class name
         const tr = document.createElement('tr');
-        tr.className = 'p' + pId
+        tr.classList.add('row');
+        tr.classList.add('row2');
+        tr.classList.add('row3');
+        tr.classList.add('p' + pId);
 
         for (let i = 0; i < arr.length - 1; i++) {
           const td = document.createElement('td');
@@ -189,12 +192,13 @@ function addTitleToTable() {
 
     // Create the title element and add it to the page
     const div1 = document.createElement('div');
-    div1.style.fontSize = '30px';
-    div1.style.marginLeft = '1px'
-    div1.style.color = 'rgb(58, 85, 88)';
-    div1.style.paddingTop = '30px';
-    div1.style.paddingBottom = '5px';
-
+    div1.classList.add('league-title');
+    /*     div1.style.fontSize = '30px';
+        div1.style.marginLeft = '1px'
+        div1.style.color = 'rgb(58, 85, 88)';
+        div1.style.paddingTop = '30px';
+        div1.style.paddingBottom = '5px';
+     */
     div1.innerText = title;
     // Get the reference element
     const div2 = document.querySelector('.' + tClass);
