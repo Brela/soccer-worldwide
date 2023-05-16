@@ -6,7 +6,7 @@ Uses api-football.com's API to pull in and display information on top scorers fo
 
   <section align="left">
 <a href="" target="_blank" rel="noreferrer">
-<img src="https://i.ibb.co/wQM7Cmd/soccer-worldwide.png" alt="soocer worldwide website screenshot" width="" height="1000"/>
+<img src="https://i.ibb.co/59PTK1m/soccer-worldwid1e.png" alt="soocer worldwide website screenshot" width="" height=""/>
 </a>
 </section>
   <br>
