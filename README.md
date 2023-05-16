@@ -1,4 +1,4 @@
-# football worldwide
+# Football (Soccer) worldwide
 A website that displays the top scorers in the most popular football (soccer) leagues.
 Uses api-football.com's API to pull in and display information on top scorers for each league for a given season.
 
