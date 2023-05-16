@@ -1,6 +1,6 @@
 # football worldwide
 A website that displays the top scorers in the most popular football (soccer) leagues.
-Uses api-football.com's API (via CDN script in html file) to pull in information on top scorers for each league for a given season.
+Uses api-football.com's API to pull in and display information on top scorers for each league for a given season.
 
 ## Live Site: <a href="https://soccer-worldwide.netlify.app/" target="_blank">soccer-worldwide.netlify.app</a>
 
