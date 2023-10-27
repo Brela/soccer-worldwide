@@ -26,14 +26,15 @@ async function getTopScorers(leagueId) {
 }
 // An async function to get the top scorers data for multiple leagues and create tables for each
 async function createTables() {
-  const arrOfLeagues = [39, 61, 253]; // shortened array of leagues for testing
+  //   const arrOfLeagues = [39, 61, 253]; // shortened array of leagues for testing
+  const arrOfLeagues = [39]; // shortened array of leagues for testing
 
   for (const id of arrOfLeagues) {
     try {
       const topScorers = await getTopScorers(id);
       createTable(topScorers, id);
       // Call this addTitle  function once after all data is in to add the title to the top of the table
-      if (id === arrOfLeagues[arrOfLeagues.length - 1]) addTitleToTable(id);
+      addTitleToTable(id);
     } catch (error) {
       console.error(error);
     }
@@ -42,138 +43,124 @@ async function createTables() {
 
 createTables();
 
-
 // ---------------------------------------------------------------------------------------
 function createTable(topScorers, leagueId) {
   // Create table element and set its class and border attribute
-  const tbl = document.createElement('table');
-  tbl.className = 'leagueId' + leagueId
-  tbl.setAttribute('border', '1');
+  const tbl = document.createElement("table");
+  tbl.className = "leagueId" + leagueId;
+  tbl.setAttribute("border", "1");
 
   // Create table body element
-  const tbdy = document.createElement('tbody');
+  const tbdy = document.createElement("tbody");
 
   // Create table header row
-  var headerRow = document.createElement('tr'); //creates blank row
-  headerRow.className = 'headingRow'
+  const headerRow = document.createElement("tr");
+  headerRow.className = "headingRow";
 
   // Create header cells containing the column headings and add them to the header row
-  let headerCells = ['', '', '', 'Goals', 'On Target', 'Assists']
+  const headerCells = ["", "", "", "Goals", "On Target", "Assists"];
   headerCells.forEach((headerCell) => {
-    const td = document.createElement('td');
+    const td = document.createElement("td");
     td.textContent = headerCell;
     headerRow.appendChild(td);
   });
-  // Add the header row to the table body
   tbdy.appendChild(headerRow);
 
-  //  ----------------------------------------------------------------------------------------------------
-  // Iterate through each player
-  // 'topScorers' comes from parameter on createTable function that awaits data from the API
-  topScorers.forEach((el, i) => {
-    // the number below determines how many top players will be shown for each league - the max is 20
-    if (i < 10) {
-      // Get player ID, photo, and name
-      let pId = el.player.id
-      console.log(pId)
-      getStats(pId)
+  // Function to add a row to the table (Moved out of the forEach loop)
+  function addRow(arr, pId) {
+    const tr = document.createElement("tr");
+    tr.classList.add("row", "row2", "row3", "p" + pId);
 
-      let pPhoto = el.player.photo
-      let pName = el.player.name
-
-      // pId is pulled in for classname of row
-      addRow([pName, pPhoto, pId])
-      // Function to add a row to the table
-      function addRow(arr) {
-        // Create table row element and set its class name
-        const tr = document.createElement('tr');
-        tr.classList.add('row');
-        tr.classList.add('row2');
-        tr.classList.add('row3');
-        tr.classList.add('p' + pId);
-
-        for (let i = 0; i < arr.length - 1; i++) {
-          const td = document.createElement('td');
-          if (i === 1) {
-            // If current element is the photo, create an image element and set its source
-            var img = document.createElement('img')
-            // pPhoto is a link to the image given by the API
-            img.src = arr[i]
-            //image is given a className so that the size can be adjusted in CSS file
-            td.className = 'imgTd'
-            td.appendChild(img)
-
-
-          } else {
-            // if the element is not the image...
-            td.appendChild(document.createTextNode(arr[i]))
-          }
-          // Append the table cell element to the table row element
-          tr.appendChild(td)
-        }
-
-        // Append the table row element to the table body element
-        tbdy.appendChild(tr); // this actually adds the row
+    for (let i = 0; i < arr.length - 1; i++) {
+      const td = document.createElement("td");
+      if (i === 1) {
+        const img = document.createElement("img");
+        img.src = arr[i];
+        td.className = "imgTd";
+        td.appendChild(img);
+      } else {
+        td.appendChild(document.createTextNode(arr[i]));
       }
+      tr.appendChild(td);
     }
-  })
+    tbdy.appendChild(tr);
+  }
+
+  // Iterate through each player
+  topScorers.forEach((el, i) => {
+    if (i < 10) {
+      const pId = el.player.id;
+      console.log(pId);
+      getStats(pId);
+
+      const pPhoto = el.player.photo;
+      const pName = el.player.name;
+
+      addRow([pName, pPhoto, pId], pId);
+    }
+  });
+
   // Append the table body element to the table element
   tbl.appendChild(tbdy);
 
   // Get the body element and append the table element to it
-  var body = document.getElementsByTagName('body')[0];
-  body.appendChild(tbl)
+  const body = document.getElementsByTagName("body")[0];
+  body.appendChild(tbl);
 }
 
 // GET STATS FOR EACH PLAYER AND ADD TO ROW THAT IS ALREADY CREATED
 //  ----------------------------------------------------------------------------------------------------
 function getStats(pId) {
   // player stats in documentation is Players -> Players
-  fetch(`https://v3.football.api-sports.io/players?id=${pId}&season=2022`, requestOptions)
-    .then(respons => respons.json())
+  fetch(
+    `https://v3.football.api-sports.io/players?id=${pId}&season=2022`,
+    requestOptions
+  )
+    .then((respons) => respons.json())
 
     // .then(result => console.log(result))
-    .then(result => {
+    .then((result) => {
       /*    let name = result.response[0].player
          console.log(name) */
       // champions league has different array position. at statistics[1] instead of statistics[0]
-      let stats = result.response[0].statistics[0] //stats
+      let stats = result.response[0].statistics[0]; //stats
 
-      addStatsToRows(stats, pId)
-
+      addStatsToRows(stats, pId);
     })
-    .catch(error => console.log('error', error));
+    .catch((error) => console.log("error", error));
 }
 
 // by this point, a table is created with each player's name and image
 // now, we add the team logo and stats
 function addStatsToRows(stats, pId) {
-
   // additional stats can be added to this array -> to see available stats, console.log(stats)
-  let playerStats = [stats.team.logo, stats.goals.total, stats.shots.on, stats.goals.assists]
+  let playerStats = [
+    stats?.team?.logo || "",
+    stats?.goals?.total || "",
+    stats?.shots?.on || "",
+    stats?.goals?.assists || "",
+  ];
 
   // Finds row for player based on pId in class name
-  let rowsClass = '.p' + pId
+  let rowsClass = ".p" + pId;
   let row = document.querySelector(rowsClass);
 
   // Iterate through each stat in playerStats add them to that row
   for (let i = 0; i < playerStats.length; i++) {
-    let td = document.createElement('td');
+    let td = document.createElement("td");
     if (i === 0) {
       // if i === 0, the element is the team logo, so create an img element and add it's value (a url) to the src
-      let img = document.createElement('img')
-      img.src = playerStats[i]
-      td.className = 'logoTd'
-      td.appendChild(img)
-
+      let img = document.createElement("img");
+      img.src = playerStats[i];
+      td.className = "logoTd";
+      td.appendChild(img);
     } else {
       // this runs for every element after the team logo image
-      td.appendChild(document.createTextNode(playerStats[i]))
+      td.appendChild(document.createTextNode(playerStats[i]));
     }
 
-    row.appendChild(td)
+    row.appendChild(td);
   }
-
 }
 
 // LEAGUE TITLE FOR EACH TABLE 
