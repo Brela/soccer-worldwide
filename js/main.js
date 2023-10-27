@@ -1,45 +1,35 @@
 
 // league and team IDs can be found in documentation - https://www.api-football.com/documentation-v3#tag/Players/operation/get-players
-// Set up the headers for the API request
-var myHeaders = new Headers();
-myHeaders.append("x-rapidapi-key", "0cdf2e99564aaa2ac3de3c12f656fb29");
-myHeaders.append("x-rapidapi-host", "v3.football.api-sports.io");
 
-var requestOptions = {
-  method: 'GET',
-  headers: myHeaders,
-  redirect: 'follow'
-};
-
-// insted of user selected from dropdown, we will just load stats on page load
-/* 
-Champions league = 2 // champions league has different array position at getstats() it is statistics[1] instead of statistics[0]
-premier league 39 | MLS = 253 | bundesliga = 78 | ligue 1 == 61 | la liga = 140 | Serie A = 71
-let arrOfLeagues = [39, 61, 253, 2, 78, 140, 71];
-*/
-
-// An async function to get the top scorers data for a given league
-async function getTopScorers(leagueId) {
-  const response = await fetch(`https://v3.football.api-sports.io/players/topscorers?season=2022&league=${leagueId}`, requestOptions);
-  const result = await response.json();
-  return result.response;
-}
-// An async function to get the top scorers data for multiple leagues and create tables for each
-async function createTables() {
-  //   const arrOfLeagues = [39, 61, 253]; // shortened array of leagues for testing
-  const arrOfLeagues = [39]; // shortened array of leagues for testing
-
-  for (const id of arrOfLeagues) {
-    try {
-      const topScorers = await getTopScorers(id);
-      createTable(topScorers, id);
-      // Call this addTitle  function once after all data is in to add the title to the top of the table
-      addTitleToTable(id);
-    } catch (error) {
-      console.error(error);
+const requestOptions = {
+    method: 'GET',
+    headers: new Headers({
+      "x-rapidapi-key": "0cdf2e99564aaa2ac3de3c12f656fb29",
+      "x-rapidapi-host": "v3.football.api-sports.io"
+    }),
+    redirect: 'follow'
+  };
+  
+  async function getTopScorers(leagueId) {
+    const response = await fetch(`https://v3.football.api-sports.io/players/topscorers?season=2022&league=${leagueId}`, requestOptions);
+    const result = await response.json();
+    return result.response;
+  }
+  
+  async function createTables() {
+    const arrOfLeagues = [39, 61, 253];  
+    // const arrOfLeagues = [39];  
+    for (const id of arrOfLeagues) {
+      try {
+        const topScorers = await getTopScorers(id);
+        createTable(topScorers, id);
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
-}
+
+
 
 createTables();
 
@@ -103,9 +93,14 @@ function createTable(topScorers, leagueId) {
   // Append the table body element to the table element
   tbl.appendChild(tbdy);
 
-  // Get the body element and append the table element to it
-  const body = document.getElementsByTagName("body")[0];
-  body.appendChild(tbl);
+  // Get the correct div element based on leagueId and append the table element to it
+  let divId;
+  if (leagueId === 39) divId = 'divPremierLeague';
+  if (leagueId === 61) divId = 'divLigue1';
+  if (leagueId === 253) divId = 'divMls';
+
+  const div = document.getElementById(divId);
+  div.appendChild(tbl);
 }
 
 // GET STATS FOR EACH PLAYER AND ADD TO ROW THAT IS ALREADY CREATED
@@ -162,72 +157,3 @@ function addStatsToRows(stats, pId) {
     row.appendChild(td);
   }
 }
-
-// LEAGUE TITLE FOR EACH TABLE 
-//  ----------------------------------------------------------------------------------------------------
-function addTitleToTable() {
-  // Get all tables on the page
-  const tables = document.querySelectorAll('table');
-
-  // Add a league title to each table based on its class name
-  tables.forEach(table => {
-    const tClass = table.className;
-    let title;
-    if (tClass === 'leagueId39') title = 'Premier League';
-    if (tClass === 'leagueId61') title = 'Ligue 1';
-    if (tClass === 'leagueId253') title = 'MLS';
-
-    // Create the title element and add it to the page
-    const div1 = document.createElement('div');
-    div1.classList.add('league-title');
-    /*     div1.style.fontSize = '30px';
-        div1.style.marginLeft = '1px'
-        div1.style.color = 'rgb(58, 85, 88)';
-        div1.style.paddingTop = '30px';
-        div1.style.paddingBottom = '5px';
-     */
-    div1.innerText = title;
-    // Get the reference element
-    const div2 = document.querySelector('.' + tClass);
-    // Get the parent element
-    const parentDiv = document.querySelector('body');
-    // Insert the new element before the reference element
-    parentDiv.insertBefore(div1, div2);
-  });
-}
-
-
-
-// TEMPLATE
-
-/* function getFetch() {
-  const choice = document.querySelector('input').value
-  const url = 'https://pokeapi.co/api/v2/pokemon/' + choice
-
-  fetch(url)
-    .then(res => res.json()) // parse response as JSON
-    .then(data => {
-      console.log(data)
-    })
-    .catch(err => {
-      console.log(`error ${err}`)
-    });
-}  */
-
-// add a rowspan --
-// i == 1 && j == 1 ? td.setAttribute('rowSpan', '2') : null;
-
-
-// this can be used to select a specific node
-/* myBody = document.getElementsByTagName("body")[0];
-myTable = myBody.getElementsByTagName("table")[0];
-myTableBody = myTable.getElementsByTagName("tbody")[0];
-myRow = myTableBody.getElementsByTagName("tr")[1];
-myCell = myRow.getElementsByTagName("td")[1];
-
-// first item element of the childNodes list of myCell
-myCellText = myCell.childNodes[0];
-
-// content of currentText is the data content of myCellText
-currentText = document.createTextNode(myCellText.data);
-myBody.appendChild(currentText); */
