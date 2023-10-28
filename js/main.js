@@ -96,7 +96,8 @@ const requestOptions = {
       console.error("Spinner element not found");
     }
   }
-  
+
+
   async function createTables() {
     document
       .querySelectorAll(".spinner")
@@ -108,6 +109,9 @@ const requestOptions = {
       try {
         const topScorers = await getTopScorers(id);
         createTable(topScorers, id);
+
+        // Delay betwen requests to fix cors error
+        await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
         console.error(error);
       }
@@ -116,57 +120,56 @@ const requestOptions = {
 
   createTables();
 
-// GET STATS FOR EACH PLAYER AND ADD TO ROW THAT IS ALREADY CREATED
-//  ----------------------------------------------------------------------------------------------------
-function getStats(pId) {
-  // player stats in documentation is Players -> Players
-  fetch(
-    `https://v3.football.api-sports.io/players?id=${pId}&season=2022`,
-    requestOptions
-  )
-    .then((respons) => respons.json())
-
-    // .then(result => console.log(result))
-    .then((result) => {
-      /*    let name = result.response[0].player
-         console.log(name) */
-      // champions league has different array position. at statistics[1] instead of statistics[0]
-      let stats = result.response[0].statistics[0]; //stats
-
-      addStatsToRows(stats, pId);
-    })
-    .catch((error) => console.log("error", error));
-}
-
-// by this point, a table is created with each player's name and image
-// now, we add the team logo and stats
-function addStatsToRows(stats, pId) {
-  // additional stats can be added to this array -> to see available stats, console.log(stats)
-  let playerStats = [
-    stats?.team?.logo || "",
-    stats?.goals?.total || "",
-    stats?.shots?.on || "",
-    stats?.goals?.assists || "",
-  ];
-
-  // Finds row for player based on pId in class name
-  let rowsClass = ".p" + pId;
-  let row = document.querySelector(rowsClass);
-
-  // Iterate through each stat in playerStats add them to that row
-  for (let i = 0; i < playerStats.length; i++) {
-    let td = document.createElement("td");
-    if (i === 0) {
-      // if i === 0, the element is the team logo, so create an img element and add it's value (a url) to the src
-      let img = document.createElement("img");
-      img.src = playerStats[i];
-      td.className = "logoTd";
-      td.appendChild(img);
-    } else {
-      // this runs for every element after the team logo image
-      td.appendChild(document.createTextNode(playerStats[i]));
-    }
-
-    row.appendChild(td);
+  // GET STATS FOR EACH PLAYER AND ADD TO ROW THAT IS ALREADY CREATED
+  //  ----------------------------------------------------------------------------------------------------
+  function getStats(pId) {
+    fetch(
+      `https://v3.football.api-sports.io/players?id=${pId}&season=2022`,
+      requestOptions
+    )
+      .then((respons) => respons.json())
+      .then((result) => {
+        let stats = result.response[0].statistics[0];
+        addStatsToRows(stats, pId);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        // If an error occurs (like CORS), pass null stats to add empty cells.
+        addStatsToRows(null, pId);
+      });
   }
-}
+
+  // by this point, a table is created with each player's name and image
+  // now, we add the team logo and stats
+  function addStatsToRows(stats, pId) {
+    let rowsClass = ".p" + pId;
+    let row = document.querySelector(rowsClass);
+
+    // Adding Team Logo
+    let tdLogo = document.createElement("td");
+    if (stats && stats.team && stats.team.logo) {
+      let img = document.createElement("img");
+      img.src = stats.team.logo;
+      tdLogo.className = "logoTd";
+      tdLogo.appendChild(img);
+    }
+    row.appendChild(tdLogo);
+
+    // Adding Goals
+    let tdGoals = document.createElement("td");
+    tdGoals.appendChild(document.createTextNode(stats?.goals?.total || " "));
+    row.appendChild(tdGoals);
+
+    // Adding Shots on Target
+    let tdShots = document.createElement("td");
+    tdShots.appendChild(document.createTextNode(stats?.shots?.on || " "));
+    row.appendChild(tdShots);
+
+    // Adding Assists
+    let tdAssists = document.createElement("td");
+    tdAssists.appendChild(
+      document.createTextNode(stats?.goals?.assists || " ")
+    );
+    row.appendChild(tdAssists);
+  }
+  
