@@ -1,10 +1,10 @@
 
   // league and team IDs can be found in documentation - https://www.api-football.com/documentation-v3#tag/Players/operation/get-players
-const API_KEY = process.env.API_KEY;
+
 const requestOptions = {
   method: "GET",
   headers: new Headers({
-    "x-rapidapi-key": API_KEY,
+    "x-rapidapi-key": "0cdf2e99564aaa2ac3de3c12f656fb29",
     "x-rapidapi-host": "v3.football.api-sports.io",
   }),
   redirect: "follow",
