@@ -21,3 +21,7 @@ Uses api-football.com's API to pull in and display information on top scorers fo
 ### Planned Optimizations:
 * show loading screen while table data is loading
 * add more content to fill up the UI slightly more
+
+### Start:
+* for client, use live server in vscode
+* for server, cd server, then: node server.js
