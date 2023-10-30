@@ -1,15 +1,5 @@
+// league and team IDs can be found in documentation - https://www.api-football.com/documentation-v3#tag/Players/operation/get-players
 
-  // league and team IDs can be found in documentation - https://www.api-football.com/documentation-v3#tag/Players/operation/get-players
-
-const requestOptions = {
-  method: "GET",
-  headers: new Headers({
-    "x-rapidapi-key": "0cdf2e99564aaa2ac3de3c12f656fb29",
-    "x-rapidapi-host": "v3.football.api-sports.io",
-  }),
-  redirect: "follow",
-};
-  
 async function getTopScorers(leagueId) {
   const response = await fetch(`http://localhost:7077/topScorers/${leagueId}`);
   if (response.ok) {
@@ -125,67 +115,46 @@ createTables();
 // GET STATS FOR EACH PLAYER AND ADD TO ROW THAT IS ALREADY CREATED
 //  ----------------------------------------------------------------------------------------------------
 
-/* function getStats(pId) {
-    fetch(
-      `https://v3.football.api-sports.io/players?id=${pId}&season=2022`,
-      requestOptions
-    )
-      .then((respons) => respons.json())
-      .then((result) => {
-        let stats = result.response[0].statistics[0];
-        addStatsToRows(stats, pId);
-      })
-      .catch((error) => {
-        console.log("error", error);
-        // If an error occurs (like CORS), pass null stats to add empty cells.
-        addStatsToRows(null, pId);
-      });
-  } */
 async function getStats(pId) {
-  console.log("here");
   const response = await fetch(`http://localhost:7077/playerStats/${pId}`);
   if (response.ok) {
     const result = await response.json();
-    console.log(result);
     let stats = result[0]?.statistics[0] || null;
     addStatsToRows(stats, pId);
   } else {
     // If an error occurs (like CORS), pass null stats to add empty cells.
     addStatsToRows(null, pId);
   }
-} 
+}
 
-  // by this point, a table is created with each player's name and image
-  // now, we add the team logo and stats
-  function addStatsToRows(stats, pId) {
-    let rowsClass = ".p" + pId;
-    let row = document.querySelector(rowsClass);
+// by this point, a table is created with each player's name and image
+// now, we add the team logo and stats
+function addStatsToRows(stats, pId) {
+  let rowsClass = ".p" + pId;
+  let row = document.querySelector(rowsClass);
 
-    // Adding Team Logo
-    let tdLogo = document.createElement("td");
-    if (stats && stats.team && stats.team.logo) {
-      let img = document.createElement("img");
-      img.src = stats.team.logo;
-      tdLogo.className = "logoTd";
-      tdLogo.appendChild(img);
-    }
-    row.appendChild(tdLogo);
-
-    // Adding Goals
-    let tdGoals = document.createElement("td");
-    tdGoals.appendChild(document.createTextNode(stats?.goals?.total || " "));
-    row.appendChild(tdGoals);
-
-    // Adding Shots on Target
-    let tdShots = document.createElement("td");
-    tdShots.appendChild(document.createTextNode(stats?.shots?.on || " "));
-    row.appendChild(tdShots);
-
-    // Adding Assists
-    let tdAssists = document.createElement("td");
-    tdAssists.appendChild(
-      document.createTextNode(stats?.goals?.assists || " ")
-    );
-    row.appendChild(tdAssists);
+  // Adding Team Logo
+  let tdLogo = document.createElement("td");
+  if (stats && stats.team && stats.team.logo) {
+    let img = document.createElement("img");
+    img.src = stats.team.logo;
+    tdLogo.className = "logoTd";
+    tdLogo.appendChild(img);
   }
-  
+  row.appendChild(tdLogo);
+
+  // Adding Goals
+  let tdGoals = document.createElement("td");
+  tdGoals.appendChild(document.createTextNode(stats?.goals?.total || " "));
+  row.appendChild(tdGoals);
+
+  // Adding Shots on Target
+  let tdShots = document.createElement("td");
+  tdShots.appendChild(document.createTextNode(stats?.shots?.on || " "));
+  row.appendChild(tdShots);
+
+  // Adding Assists
+  let tdAssists = document.createElement("td");
+  tdAssists.appendChild(document.createTextNode(stats?.goals?.assists || " "));
+  row.appendChild(tdAssists);
+}
