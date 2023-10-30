@@ -45,22 +45,6 @@ app.get("/topScorers/:leagueId", async (req, res) => {
   }
 });
 
-/* function getStats(pId) {
-    fetch(
-      `https://v3.football.api-sports.io/players?id=${pId}&season=2022`,
-      requestOptions
-    )
-      .then((respons) => respons.json())
-      .then((result) => {
-        let stats = result.response[0].statistics[0];
-        addStatsToRows(stats, pId);
-      })
-      .catch((error) => {
-        console.log("error", error);
-        // If an error occurs (like CORS), pass null stats to add empty cells.
-        addStatsToRows(null, pId);
-      });
-  } */
 app.get("/playerStats/:playerId", async (req, res) => {
   const { playerId } = req.params;
 
