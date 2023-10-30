@@ -11,7 +11,7 @@ import("node-fetch").then((module) => {
 });
 
 const app = express();
-const PORT = 7077;
+const PORT = process.env.PORT || 7077;
 
 // Enable CORS for all routes
 app.use(cors());
@@ -32,6 +32,10 @@ const requestOptions = {
   },
   redirect: "follow",
 };
+
+app.get("/test", async (req, res) => {
+  res.json("test successful");
+});
 
 app.get("/topScorers/:leagueId", async (req, res) => {
   const { leagueId } = req.params;
