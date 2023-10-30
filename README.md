@@ -4,10 +4,6 @@ Uses api-football.com's API to pull in and display information on top scorers fo
 
 ## Live Site: <a href="https://soccer-worldwide.netlify.app/" target="_blank">soccer-worldwide.netlify.app</a>
 
-  <section align="left">
-<a href="" target="_blank" rel="noreferrer">
-<img src="https://i.ibb.co/59PTK1m/soccer-worldwid1e.png" alt="soocer worldwide website screenshot" width="300" height="250"/>
-</a>
 </section>
   <br>
 
