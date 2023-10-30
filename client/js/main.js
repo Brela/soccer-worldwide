@@ -1,7 +1,11 @@
 // league and team IDs can be found in documentation - https://www.api-football.com/documentation-v3#tag/Players/operation/get-players
 
+// const API_URL = "http://localhost:7077";
+// make sure to use the railway url when pusing to up
+const API_URL = "https://soccer-worldwide-production.up.railway.app";
+
 async function getTopScorers(leagueId) {
-  const response = await fetch(`http://localhost:7077/topScorers/${leagueId}`);
+  const response = await fetch(`${API_URL}/topScorers/${leagueId}`);
   if (response.ok) {
     const result = await response.json();
     return result;
@@ -115,7 +119,7 @@ createTables();
 //  ----------------------------------------------------------------------------------------------------
 
 async function getStats(pId) {
-  const response = await fetch(`http://localhost:7077/playerStats/${pId}`);
+  const response = await fetch(`${API_URL}/playerStats/${pId}`);
   if (response.ok) {
     const result = await response.json();
     let stats = result[0]?.statistics[0] || null;
