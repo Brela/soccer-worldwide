@@ -13,6 +13,7 @@ Uses api-football.com's API to pull in and display information on top scorers fo
 ## Highlights of Completed Tasks
 ✔️ made mobile friendly
 ✔️ used JS to load data and tables
+✔️ added node backend hosted on Railway in order to hide API keys
 
 ### Planned Optimizations:
 ✔️  show loading screen while table data is loading
