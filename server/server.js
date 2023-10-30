@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
 let fetch;
 
@@ -9,12 +11,12 @@ import("node-fetch").then((module) => {
 });
 
 const app = express();
-const PORT = 7077; // You can choose a different port if you like
+const PORT = 7077;
 
 // Enable CORS for all routes
 app.use(cors());
 
-const API_KEY = "0cdf2e99564aaa2ac3de3c12f656fb29"; // It's safer to use environment variables for API keys
+const API_KEY = process.env.API_KEY; 
 
 async function fetchData(url, options) {
   const response = await fetch(url, options);

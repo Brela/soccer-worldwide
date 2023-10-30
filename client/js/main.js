@@ -58,7 +58,6 @@ function createTable(topScorers, leagueId) {
   topScorers.forEach((el, i) => {
     if (i < 10) {
       const pId = el.player.id;
-      console.log(pId);
       getStats(pId);
 
       const pPhoto = el.player.photo;
@@ -83,7 +82,7 @@ function createTable(topScorers, leagueId) {
   // turn off spinner since data is in
   const spinner = div.querySelector(".spinner");
   if (spinner) {
-    console.log(spinner);
+
     spinner.style.display = "none";
   } else {
     console.error("Spinner element not found");
